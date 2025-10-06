@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import List from './List'
+import AddItem from './AddItem'
 
-const API_BASE = '/api'
+const API_BASE = (import.meta.env.VITE_API_HOST || '') + '/api'
 
 function App() {
   const [todos, setTodos] = useState([])
-  const [title, setTitle] = useState('')
 
   useEffect(() => {
     fetchTodos()
@@ -16,17 +17,17 @@ function App() {
     setTodos(data)
   }
 
-  async function addTodo(e) {
-    e.preventDefault()
-    if (!title.trim()) return
+  async function addTodo(title) {
+    if (!title.trim()) return false
     const res = await fetch(`${API_BASE}/todos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description: '' })
     })
+    if (!res.ok) return false
     const data = await res.json()
     setTodos([data, ...todos])
-    setTitle('')
+    return true
   }
 
   async function toggleComplete(todo) {
@@ -47,22 +48,8 @@ function App() {
   return (
     <div className="container">
       <h1>Your To-Do List</h1>
-      <form onSubmit={addTodo} className="add-form">
-        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Add a new to-do" />
-        <button type="submit">Add</button>
-      </form>
-
-      <ul className="todos">
-        {todos.map(todo => (
-          <li key={todo.id} className={todo.completed ? 'completed' : ''}>
-            <label>
-              <input type="checkbox" checked={todo.completed} onChange={() => toggleComplete(todo)} />
-              <span>{todo.title}</span>
-            </label>
-            <button className="delete" onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <AddItem onAdd={addTodo} />
+      <List todos={todos} onToggle={toggleComplete} onDelete={deleteTodo} />
     </div>
   )
 }

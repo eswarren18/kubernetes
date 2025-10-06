@@ -1,0 +1,52 @@
+volumes:
+  db-data:
+
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_pass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+
+  api:
+    image: kubernetes-api:dev
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: '5432'
+      DATABASE_USER: todo_user
+      DATABASE_PASSWORD: todo_pass
+      DATABASE_NAME: todo_db
+      CORS_HOST: http://localhost:5173
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    user: "1000:1000"
+    volumes:
+      - ./api:/app
+
+  ui:
+    image: kubernetes-ui:dev
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    user: "1000:1000"
+    volumes:
+      - ./ui:/app
+    environment:
+      VITE_API_HOST: http://localhost:8000
+      BASE_URL: http://localhost:5173
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
