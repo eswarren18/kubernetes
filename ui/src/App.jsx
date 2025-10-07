@@ -13,7 +13,6 @@ function App() {
 
   async function fetchTodos() {
     const res = await fetch(`${API_BASE}/todos`)
-    console.log('Fetch todos response:', res)
     const data = await res.json()
     setTodos(data)
   }
