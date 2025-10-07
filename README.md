@@ -1,5 +1,9 @@
 # Todo Fullstack (FastAPI + React + Docker)
 
+## Prerequisits
+
+kubectl kind k6
+
 ## Services
 
 - **db**: Postgres database (port 15432)
