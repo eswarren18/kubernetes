@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import List from './List'
-import AddItem from './AddItem'
+import Form from './Form'
 
 const API_BASE = (import.meta.env.VITE_API_HOST || '') + '/api'
 
@@ -13,6 +13,7 @@ function App() {
 
   async function fetchTodos() {
     const res = await fetch(`${API_BASE}/todos`)
+    console.log('Fetch todos response:', res)
     const data = await res.json()
     setTodos(data)
   }
@@ -48,7 +49,7 @@ function App() {
   return (
     <div className="container">
       <h1>Your To-Do List</h1>
-      <AddItem onAdd={addTodo} />
+      <Form onAdd={addTodo} />
       <List todos={todos} onToggle={toggleComplete} onDelete={deleteTodo} />
     </div>
   )

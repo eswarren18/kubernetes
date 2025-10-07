@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function AddItem({ onAdd }) {
+function Form({ onAdd }) {
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
 
@@ -29,4 +29,4 @@ function AddItem({ onAdd }) {
   )
 }
 
-export default AddItem
+export default Form
