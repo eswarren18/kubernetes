@@ -19,3 +19,13 @@ def delete_todo(db: Session, db_todo: models.Todo):
     db.delete(db_todo)
     db.commit()
     return True
+
+def update_todo(db: Session, db_todo: models.Todo, updates: schemas.TodoBase):
+    if updates.title is not None:
+        db_todo.title = updates.title
+    if updates.completed is not None:
+        db_todo.completed = updates.completed
+    db.add(db_todo)
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo

@@ -12,3 +12,7 @@ class TodoOut(TodoBase):
     id: int
     class Config:
         orm_mode = True
+
+class TodoUpdate(BaseModel):
+    title: Optional[str] = None
+    completed: Optional[bool] = None

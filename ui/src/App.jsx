@@ -27,7 +27,8 @@ function App() {
     })
     if (!res.ok) return false
     const data = await res.json()
-    setTodos([data, ...todos])
+    const updated = [...todos, data].sort((a, b) => a.title.localeCompare(b.title))
+    setTodos(updated)
     return true
   }
 
@@ -38,12 +39,12 @@ function App() {
       body: JSON.stringify({ completed: !todo.completed })
     })
     const updated = await res.json()
-    setTodos(todos.map(t => t.id === updated.id ? updated : t))
+    setTodos(todos.map(t => t.id === updated.id ? updated : t).sort((a, b) => a.title.localeCompare(b.title)))
   }
 
   async function deleteTodo(id) {
     await fetch(`${API_BASE}/todos/${id}`, { method: 'DELETE' })
-    setTodos(todos.filter(t => t.id !== id))
+    setTodos(todos.filter(t => t.id !== id).sort((a, b) => a.title.localeCompare(b.title)))
   }
 
   return (
