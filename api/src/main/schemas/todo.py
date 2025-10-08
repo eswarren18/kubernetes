@@ -11,7 +11,7 @@ class TodoCreate(TodoBase):
 class TodoOut(TodoBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TodoUpdate(BaseModel):
     title: Optional[str] = None

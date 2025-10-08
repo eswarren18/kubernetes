@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from ..schemas import todo as schemas
 from ..models import todo as models
@@ -6,6 +7,11 @@ from ...db.session import get_db
 from ...db import crud
 
 router = APIRouter(prefix="/todos", tags=["Todo"])
+
+# Health check endpoint
+@router.get("/health", include_in_schema=False)
+def health_check():
+    return JSONResponse(content={"status": "ok"})
 
 @router.get("/", response_model=list[schemas.TodoOut])
 def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
