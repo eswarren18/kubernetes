@@ -32,7 +32,6 @@ spec:
               value: "5432"
             - name: DATABASE_HOST
               value: "db"
-          # resource requests so HPA/metrics can react
           resources:
             requests:
               cpu: "100m"
